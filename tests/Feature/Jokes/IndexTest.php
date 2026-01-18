@@ -17,7 +17,7 @@ it('displays the jokes page', function () {
 
     $this->get(route('jokes.index'))
         ->assertOk()
-        ->assertSee('Jokes')
+        ->assertSee('Jokes - 3')
         ->assertSee($jokes[0]->text)
         ->assertSee($jokes[1]->text)
         ->assertSee($jokes[2]->text);

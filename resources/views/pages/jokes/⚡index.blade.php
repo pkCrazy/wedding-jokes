@@ -10,6 +10,7 @@ new #[Title('Jokes')] class extends Component
     public function with(): array
     {
         return [
+            'numberOfJokes' => Joke::count(),
             'jokes' => Joke::cursor(),
         ];
     }
@@ -23,7 +24,7 @@ new #[Title('Jokes')] class extends Component
 
 <section class="w-full">
     <div class="flex items-start justify-between mb-6">
-        <flux:heading size="xl" level="1">{{ __('Jokes') }}</flux:heading>
+        <flux:heading size="xl" level="1">{{ __('Jokes') }} - {{ $numberOfJokes }}</flux:heading>
         <flux:button :href="route('jokes.create')" variant="primary" wire:navigate>
             {{ __('Create Joke') }}
         </flux:button>
