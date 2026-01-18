@@ -11,6 +11,7 @@ Route::view('dashboard', 'dashboard')
     ->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::livewire('jokes', 'pages::jokes.index')->name('jokes.index');
     Route::livewire('jokes/create', 'pages::jokes.create')->name('jokes.create');
 });
 

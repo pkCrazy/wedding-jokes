@@ -15,6 +15,9 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="newspaper" :href="route('jokes.index')" :current="request()->routeIs('jokes.index')" wire:navigate>
+                        {{ __('Jokes') }}
+                    </flux:sidebar.item>
                     <flux:sidebar.item icon="plus" :href="route('jokes.create')" :current="request()->routeIs('jokes.create')" wire:navigate>
                         {{ __('Create Joke') }}
                     </flux:sidebar.item>
