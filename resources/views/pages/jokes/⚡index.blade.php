@@ -33,7 +33,7 @@ new #[Title('Jokes')] class extends Component
         @foreach ($jokes as $joke)
             <div wire:key="joke-{{ $joke->id }}" class="p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm flex flex-col justify-between">
                 <flux:text class="line-clamp-6 mb-4">
-                    {{ $joke->text }}
+                    {!! nl2br(e($joke->text)) !!}
                 </flux:text>
 
                 <div class="flex justify-end">
