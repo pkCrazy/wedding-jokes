@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Language;
 use App\Models\Joke;
 use App\Models\User;
 use Livewire\Livewire;
@@ -15,12 +16,14 @@ it('displays the jokes page', function () {
 
     $this->actingAs($user);
 
-    $this->get(route('jokes.index'))
-        ->assertOk()
-        ->assertSee('Jokes - 3')
-        ->assertSee($jokes[0]->text)
-        ->assertSee($jokes[1]->text)
-        ->assertSee($jokes[2]->text);
+    $response = $this->get(route('jokes.index'));
+
+    $response->assertOk()
+        ->assertSee('Jokes - 3');
+
+    foreach ($jokes as $joke) {
+        $response->assertSee($joke->text);
+    }
 });
 
 it('displays jokes in the component', function () {
@@ -32,5 +35,30 @@ it('displays jokes in the component', function () {
     Livewire::test('pages::jokes.index')
         ->assertViewHas('jokes', function ($jokes) {
             return $jokes instanceof \Illuminate\Support\LazyCollection && $jokes->count() === 10;
+        });
+});
+
+it('can filter jokes by language', function () {
+    $user = User::factory()->create();
+    Joke::factory(5)->create(['language' => Language::English]);
+    Joke::factory(3)->create(['language' => Language::Hungarian]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::jokes.index')
+        ->assertViewHas('jokes', function ($jokes) {
+            return $jokes->count() === 8;
+        })
+        ->set('language', Language::English->value)
+        ->assertViewHas('jokes', function ($jokes) {
+            return $jokes->count() === 5;
+        })
+        ->set('language', Language::Hungarian->value)
+        ->assertViewHas('jokes', function ($jokes) {
+            return $jokes->count() === 3;
+        })
+        ->set('language', '')
+        ->assertViewHas('jokes', function ($jokes) {
+            return $jokes->count() === 8;
         });
 });

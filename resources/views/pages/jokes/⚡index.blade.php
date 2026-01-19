@@ -1,17 +1,28 @@
 <?php
 
 use App\Models\Joke;
+use App\Enums\Language;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Illuminate\Support\LazyCollection;
 
 new #[Title('Jokes')] class extends Component
 {
+    #[Url]
+    public ?string $language = null;
+
     public function with(): array
     {
+        $query = Joke::query();
+
+        if ($this->language) {
+            $query->where('language', $this->language);
+        }
+
         return [
-            'numberOfJokes' => Joke::count(),
-            'jokes' => Joke::cursor(),
+            'numberOfJokes' => $query->count(),
+            'jokes' => $query->cursor(),
         ];
     }
 
@@ -25,9 +36,19 @@ new #[Title('Jokes')] class extends Component
 <section class="w-full">
     <div class="flex items-start justify-between mb-6">
         <flux:heading size="xl" level="1">{{ __('Jokes') }} - {{ $numberOfJokes }}</flux:heading>
-        <flux:button :href="route('jokes.create')" variant="primary" wire:navigate>
-            {{ __('Create Joke') }}
-        </flux:button>
+
+        <div class="flex items-center gap-4">
+            <flux:select wire:model.live="language" :placeholder="__('All languages')" class="min-w-48">
+                <option value="">{{ __('All languages') }}</option>
+                @foreach (Language::cases() as $lang)
+                    <option value="{{ $lang->value }}">{{ $lang->name }}</option>
+                @endforeach
+            </flux:select>
+
+            <flux:button :href="route('jokes.create')" variant="primary" wire:navigate>
+                {{ __('Create Joke') }}
+            </flux:button>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

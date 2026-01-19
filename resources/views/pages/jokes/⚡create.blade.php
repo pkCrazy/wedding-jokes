@@ -1,14 +1,25 @@
 <?php
 
 use App\Models\Joke;
+use App\Enums\Language;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Illuminate\Validation\Rule;
 
 new #[Title('Create Joke')] class extends Component
 {
-    #[Validate('required|string|max:500')]
     public string $text = '';
+
+    public ?string $language = null;
+
+    public function rules(): array
+    {
+        return [
+            'text' => ['required', 'string', 'max:500'],
+            'language' => ['required', Rule::enum(Language::class)],
+        ];
+    }
 
     public function save(): void
     {
@@ -16,6 +27,7 @@ new #[Title('Create Joke')] class extends Component
 
         Joke::create([
             'text' => $this->text,
+            'language' => $this->language,
         ]);
 
         $this->reset();
@@ -36,6 +48,12 @@ new #[Title('Create Joke')] class extends Component
             rows="5"
             autofocus
         />
+
+        <flux:select wire:model="language" :label="__('Language')" :placeholder="__('Choose a language...')">
+            @foreach (Language::cases() as $lang)
+                <option value="{{ $lang->value }}">{{ $lang->name }}</option>
+            @endforeach
+        </flux:select>
 
         <div class="flex items-center gap-4">
             <flux:button variant="primary" type="submit">

@@ -18,6 +18,7 @@ class JokeFactory extends Factory
     {
         return [
             'text' => fake()->realTextBetween(100, 500),
+            'language' => fake()->randomElement(\App\Enums\Language::cases()),
         ];
     }
 }

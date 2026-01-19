@@ -12,5 +12,13 @@ class Joke extends Model
 
     protected $fillable = [
         'text',
+        'language',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'language' => \App\Enums\Language::class,
+        ];
+    }
 }
